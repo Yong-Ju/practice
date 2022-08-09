@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8">
+    </head>
+<body>
+    name: <input type="text" id="name">
+    value: <input type="text" id="value">
+    <input type="button" value="add cookie" onclick="AddCookie()">
+    <input type="button" value="del cookie" onclick="DelCookie()">
+    <div id="cookie_list" style="border: 1px solid #000000; padding: 10px; margin-top: 10px;">
+    </div> 
+
+    <script>
+        // 쿠키 추가, 삭제
+        // @param strName 쿠키 이름
+        // @param strValue 쿠키 값
+        // @param iSecond null 을 입력하면 일시적인 쿠키 생성. 0 보다 큰 값을 입력하면 쿠키 유지기간 포함한 쿠키생성. 0 입력시 쿠키 삭제
+
+        // 쿠키설정
+        function SetCookie(strName, strValue, iSecond){
+            var strCookie = strName + "=" + encodeURIComponent(strValue);
+            if (typeof iSecond === "number"){
+                strCookie += "; max-age=" + iSecond;
+            }
+            // path, domain 범위 추가가 필요할 시 파라메터 추가 필요
+
+            document.cookie = strCookie;
+
+        }
+
+        // 쿠키추가
+        function AddCookie(){
+            var strName = document.getElementById("name").value;
+            var strValue = document.getElementById("value").value;
+            SetCookie(strName, strValue, null);
+            ShowCookie();
+        }
+
+        // 쿠키삭제
+        function DelCookie(){
+            var strName = document.getElementById("name").value;
+            var strValue = document.getElementById("value").value;
+            SetCookie(strName, strValue, 0);
+            ShowCookie();
+        }
+
+        function ShowCookie(){
+            var divCookie = document.getElementById("cookie_list");
+
+            if(document.cookie == null || document.cookie == "" ){
+                divCookie.innerHTML = "";
+                return;
+            }
+
+            var listCookie = document.cookie.split("; ");
+            var strCookie = "";
+             for(var i = 0; i < listCookie.length; ++i){
+                var iPos = listCookie[i].indexOf("=");
+                var strName = listCookie[i].substring(0,iPos);
+                var strValue = listCookie[i].substring(iPos+1);
+                strValue = decodeURIComponent(strValue);
+                strCookie += strName + "=" + strValue + "<br>\n";
+             }
+             divCookie.innerHTML=strCookie;
+        }
+
+        ShowCookie();
+
+    </script>
+
+</body> 
+</html>
